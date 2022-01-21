@@ -9,7 +9,9 @@ pub fn day1_ex1() {
 
 pub fn day1_ex2() {
   let profondeurs = init_profondeurs("./day1/day1.txt");
-  window_slider(&profondeurs);
+  let sum_of_three = make_window(0, 3, &profondeurs);
+  let increased3 = compare_increased_profondeurs(&sum_of_three);
+  println!("Il y a {} relevés en augmentation.", increased3);
 }
 
 fn init_profondeurs(path: &str) -> Vec<u32> {
@@ -47,36 +49,37 @@ fn count_increased_profondeurs(v: &Vec<u32>) -> u32 {
   counter
 }
 
-fn window_slider(profondeurs: &Vec<u32>) {
-  let sommes_a: Vec<u32> = make_window(2, 3, profondeurs);
-  for p in &sommes_a {
-    // println!("{}", p);
+fn compare_increased_profondeurs(v_sums: &Vec<u32>) -> u32 {
+  let mut prev_win_sum: u32 = 0;
+  let mut increases_counter: u32 = 0;
+
+  for i in 0..v_sums.len() {
+    if prev_win_sum == 0 {
+      println!("{} (N/A - no previous measurement)", v_sums[i]);
+      prev_win_sum = v_sums[i];
+    } else if v_sums[i] > prev_win_sum {
+      println!("{} (increased)", v_sums[i]);
+      increases_counter += 1;
+      prev_win_sum = v_sums[i];
+    } else {
+      println!("{} (decreased)", v_sums[i]);
+      prev_win_sum = v_sums[i];
+    }
   }
-  println!("Taille de sommesA est {}:", &sommes_a.len());
+  increases_counter
 }
 
-fn make_window(start: usize, offset: u32, profondeurs: &Vec<u32>) -> Vec<u32> {
-  let len = profondeurs.len();
+fn make_window(start: usize, offset: usize, profondeurs: &Vec<u32>) -> Vec<u32> {
+  let max_vector_index = profondeurs.len() - (profondeurs.len() % offset);
   let mut sommes: Vec<u32> = vec![];
   let mut si: u32 = 0;
-  let mut offset_counter: u32 = 0;
 
-  for i in start..len {
-    if offset_counter < offset {
-      si += profondeurs[i];
-      offset_counter += 1;
-
-      // println!(
-      //   "valeur {} (offset_counter : {})",
-      //   profondeurs[i], offset_counter
-      // );
-    } else {
-      sommes.push(si);
-      offset_counter = 0;
-      println!("{} push {} (offset_counter : {})", i, si, offset_counter);
-      offset_counter = 1;
-      si = profondeurs[i];
+  for i in start..max_vector_index {
+    for j in 0..offset {
+      si += profondeurs[i + j];
     }
+    sommes.push(si);
+    si = 0;
   }
   sommes
 }
