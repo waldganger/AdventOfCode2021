@@ -23,7 +23,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="day1\day1%3btxt\Text.txt">
+    <Text Include="day1\day1%3btxt\day1.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

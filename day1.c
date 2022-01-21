@@ -2,10 +2,7 @@
 
 #define BUFFERLEN 6
 
-typedef struct {
-    char** arr;
-    size_t lineCount;
-}Profondeurs;
+
 
 
 static Profondeurs initProfondeursStrArr(char* filename);
@@ -55,6 +52,14 @@ int day1Ex1(void)
 
 int day1Ex2(void)
 {
+    Window window = { 0 };
+
+    Profondeurs initProfondeurs = initProfondeursStrArr(u8"day1/day1.txt");
+
+    int32_t* profondeurs = initProfondeursArr(initProfondeurs.arr, initProfondeurs.lineCount);
+
+
+
     return 0;
 }
 
