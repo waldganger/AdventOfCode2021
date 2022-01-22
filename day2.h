@@ -2,6 +2,7 @@
 #include "commoncpp.h"
 
 typedef struct {
+	int aim;
 	int x;
 	int y;
 } Position;
@@ -20,4 +21,4 @@ typedef struct {
 
 
 //Instruction instructionDecoder(const std::string& line, const char delimiter);
-void runDay2first();
+void runDay2Second();

@@ -3,7 +3,7 @@
 
 int main()
 {
-	runDay2first();
+	runDay2Second();
 }
 
 

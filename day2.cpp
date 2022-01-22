@@ -34,14 +34,15 @@ void instructionExec(Position& p, const Instruction i)
 	case Direction::forward:
 		std::cout << "Going forward " << i.distance << std::endl;
 		p.x += i.distance;
+		p.y += p.aim * i.distance;
 		break;
 	case Direction::up:
 		std::cout << "Going up " << i.distance << std::endl;
-		p.y -= i.distance;
+		p.aim -= i.distance;
 		break;
 	case Direction::down:
 		std::cout << "Going down " << i.distance << std::endl;
-		p.y += i.distance;
+		p.aim += i.distance;
 		break;
 	default:
 		break;
@@ -66,7 +67,7 @@ std::vector<std::string> parseFile(const char* path)
 	return v;
 }
 
-void runDay2first()
+void runDay2Second()
 {
 	Position submarinePosition = { 0 };
 	std::vector<std::string> v = parseFile("day2/day2.txt");
