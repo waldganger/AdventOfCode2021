@@ -19,15 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="day1.c" />
-    <ClCompile Include="main.c" />
+    <Text Include="day2\day2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="day1\day1%3btxt\day1.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="common.h" />
-    <ClInclude Include="day1.h" />
+    <ClCompile Include="day2\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
