@@ -70,7 +70,7 @@ std::vector<std::string> parseFile(const char* path)
 void runDay2Second()
 {
 	Position submarinePosition = { 0 };
-	std::vector<std::string> v = parseFile("day2/day2.txt");
+	std::vector<std::string> v = parseFile("res/day2.txt");
 	for (const std::string& s : v)
 	{
 		instructionExec(submarinePosition, instructionDecoder(s, ' '));
