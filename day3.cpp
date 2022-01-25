@@ -29,20 +29,19 @@ std::vector<std::string> parseBinFile(const char* path)
 	return v;
 }
 
-void runday3()
+// From each column of the report, writes dominant bit in a string passed as argument
+std::string findDominantBits(const std::vector<std::string>& report, std::string& bitString)
 {
-	auto v = parseBinFile("res/day3.txt");
-	const auto columnLenght = v.size();
+	const size_t lineLenght = report[1].length();
+	std::string eqChecker = "";
 
-	std::string dominantBits;
-
-	for (size_t l = 0; l < LINE_LENGHT; l++)
+	for (size_t l = 0; l < lineLenght; l++)
 	{
 		int zeroCount = 0;
 		int oneCount = 0;
-		for (size_t c = 0; c < v.size(); c++)
+		for (size_t c = 0; c < report.size(); c++)
 		{
-			switch (v[c][l])
+			switch (report[c][l])
 			{
 			case '0':
 				zeroCount++;
@@ -55,9 +54,79 @@ void runday3()
 			default:
 				break;
 			}
+			zeroCount == oneCount ? eqChecker.push_back('=') : eqChecker.push_back(' ');
 		}
-		dominantBits.push_back(zeroCount > oneCount ? '0' : '1');
+		bitString.push_back(zeroCount > oneCount ? '0' : '1');
 	}
+}
+
+std::string getRating(const std::vector<std::string>& report, const std::string& dominantBits, const std::string& eqChecker, Ratings method)
+{
+	std::vector<std::string> matchingNumbers;
+	std::vector<bool> linesToKeep(report.size());
+	int goodLinesRemaining = 0;
+	for (auto l : linesToKeep)
+	{
+		l = true;
+		goodLinesRemaining++;
+	}
+
+	for (size_t c = 0; c < dominantBits.length(); c++)
+	{
+		if (eqChecker[c] == '=')
+		{
+			for (size_t l = 0; l < report.size(); l++)
+			{
+				if (goodLinesRemaining <= 1) { return report[l]; }
+				std::string temp(1, report[l][c]);
+				if (std::stoi(temp) == 0)
+				{
+					linesToKeep[l] = false;
+					goodLinesRemaining--;
+				}
+			}
+		}
+		else
+		{
+			for (size_t l = 0; l < report.size(); l++)
+			{
+				if (goodLinesRemaining <= 1) { return report[l]; }
+
+				if (report[l][c] != dominantBits[c])
+				{
+					linesToKeep[l] = false;
+					goodLinesRemaining--;
+				}
+			}
+		}
+
+	}
+
+	int result = 0;
+	for (auto l : linesToKeep)
+	{
+		result += l;
+	}
+
+	return "neh";
+}
+
+void day3part2()
+{
+	auto report = parseBinFile("res/day3.txt");
+	std::string dominantBits;
+	std::string eqChecker = findDominantBits(report, dominantBits);
+	std::cout << dominantBits << std::endl;
+
+	std::cout << getRating(report, dominantBits, eqChecker, Ratings::oxygen_generator) << std::endl;
+}
+
+void day3part1()
+{
+	auto v = parseBinFile("res/day3.txt");
+
+	std::string dominantBits;
+	findDominantBits(v, dominantBits);
 
 	std::cout << dominantBits << std::endl;
 
@@ -70,4 +139,9 @@ void runday3()
 	std::cout << "gamma : " << gamma << std::endl;
 	std::cout << "epsilon : " << epsilon << std::endl;
 	std::cout << "gamma * epsilon bitwise  : " << gamma * epsilon << std::endl;
+}
+
+void runday3()
+{
+	day3part2();
 }

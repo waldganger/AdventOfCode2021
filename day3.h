@@ -9,4 +9,11 @@ typedef struct {
 	bool binaryRepresentation[LINE_LENGHT];
 } Rate;
 
+enum class Ratings
+{
+	C02_scrubber,
+	oxygen_generator,
+
+};
+
 void runday3();
