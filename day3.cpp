@@ -30,6 +30,7 @@ std::vector<std::string> parseBinFile(const char* path)
 }
 
 // From each column of the report, writes dominant bit in a string passed as argument
+// Returns a string mapped to the report columns. The string flags with a '=' if the number of 0 equals the numbers of 1
 std::string findDominantBits(const std::vector<std::string>& report, std::string& bitString)
 {
 	const size_t lineLenght = report[1].length();
@@ -54,10 +55,11 @@ std::string findDominantBits(const std::vector<std::string>& report, std::string
 			default:
 				break;
 			}
-			zeroCount == oneCount ? eqChecker.push_back('=') : eqChecker.push_back(' ');
 		}
+		zeroCount == oneCount ? eqChecker.push_back('=') : eqChecker.push_back(' ');
 		bitString.push_back(zeroCount > oneCount ? '0' : '1');
 	}
+	return eqChecker;
 }
 
 std::string getRating(const std::vector<std::string>& report, const std::string& dominantBits, const std::string& eqChecker, Ratings method)
@@ -79,7 +81,9 @@ std::string getRating(const std::vector<std::string>& report, const std::string&
 			{
 				if (goodLinesRemaining <= 1) { return report[l]; }
 				std::string temp(1, report[l][c]);
-				if (std::stoi(temp) == 0)
+
+				// If 0 and 1 are equally common, keep values with a 1 (oxygen generator) or a 0 (CO2 scrubber)  in the position being considered.
+				if (std::stoi(temp) == (method == Ratings::oxygen_generator ? 0 : 1))
 				{
 					linesToKeep[l] = false;
 					goodLinesRemaining--;
@@ -92,7 +96,14 @@ std::string getRating(const std::vector<std::string>& report, const std::string&
 			{
 				if (goodLinesRemaining <= 1) { return report[l]; }
 
-				if (report[l][c] != dominantBits[c])
+				std::string temp(1, report[l][c]);
+				std::string tempBitChar(1, dominantBits[c]);
+				const int dominantBitToInt = std::stoi(tempBitChar);
+
+				// depending on rating method, keep the most OR least common bit in the current bit position, and keep only lines with that bit in that position.
+				int bitToKeep = (method == Ratings::oxygen_generator ? dominantBitToInt : (dominantBitToInt ? 0 : 1));
+
+				if (std::stoi(temp) != bitToKeep)
 				{
 					linesToKeep[l] = false;
 					goodLinesRemaining--;
@@ -117,8 +128,17 @@ void day3part2()
 	std::string dominantBits;
 	std::string eqChecker = findDominantBits(report, dominantBits);
 	std::cout << dominantBits << std::endl;
+	std::cout << "Equality checker : " << "\"" << eqChecker << "\"" << std::endl;
 
+	std::cout << "oxygen generator rating" << std::endl;
 	std::cout << getRating(report, dominantBits, eqChecker, Ratings::oxygen_generator) << std::endl;
+
+	std::cout << "CO2 scrubber rating" << std::endl;
+	std::cout << getRating(report, dominantBits, eqChecker, Ratings::C02_scrubber) << std::endl;
+
+	int result = std::stoi(getRating(report, dominantBits, eqChecker, Ratings::oxygen_generator), nullptr, 2) * std::stoi(getRating(report, dominantBits, eqChecker, Ratings::C02_scrubber), nullptr, 2);
+
+	std::cout << "The life support rating : " << result << std::endl;
 }
 
 void day3part1()
