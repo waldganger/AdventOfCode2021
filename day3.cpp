@@ -62,7 +62,7 @@ std::string findDominantBits(const std::vector<std::string>& report, std::string
 	return eqChecker;
 }
 
-std::string getRating(const std::vector<std::string>& report, const std::string& dominantBits, const std::string& eqChecker, Ratings method)
+int getRating(const std::vector<std::string>& report, const std::string& dominantBits, const std::string& eqChecker, Ratings method)
 {
 	std::vector<std::string> matchingNumbers;
 	std::vector<bool> linesToKeep(report.size());
@@ -79,7 +79,7 @@ std::string getRating(const std::vector<std::string>& report, const std::string&
 		{
 			for (size_t l = 0; l < report.size(); l++)
 			{
-				if (goodLinesRemaining <= 1) { return report[l]; }
+				if (goodLinesRemaining <= 1) { return std::stoi(report[l], nullptr, 2); }
 				std::string temp(1, report[l][c]);
 
 				// If 0 and 1 are equally common, keep values with a 1 (oxygen generator) or a 0 (CO2 scrubber)  in the position being considered.
@@ -94,7 +94,7 @@ std::string getRating(const std::vector<std::string>& report, const std::string&
 		{
 			for (size_t l = 0; l < report.size(); l++)
 			{
-				if (goodLinesRemaining <= 1) { return report[l]; }
+				if (goodLinesRemaining <= 1) { return std::stoi(report[l], nullptr, 2); }
 
 				std::string temp(1, report[l][c]);
 				std::string tempBitChar(1, dominantBits[c]);
@@ -114,12 +114,18 @@ std::string getRating(const std::vector<std::string>& report, const std::string&
 	}
 
 	int result = 0;
-	for (auto l : linesToKeep)
+	//for (auto l : linesToKeep)
+	//{
+	//	result += l;
+	//}
+
+
+	for (int i = 0; i < linesToKeep.size(); i++)
 	{
-		result += l;
+		if (i) result = i;
 	}
 
-	return "neh";
+	return std::stoi(matchingNumbers[result], nullptr, 2);
 }
 
 void day3part2()
@@ -136,7 +142,7 @@ void day3part2()
 	std::cout << "CO2 scrubber rating" << std::endl;
 	std::cout << getRating(report, dominantBits, eqChecker, Ratings::C02_scrubber) << std::endl;
 
-	int result = std::stoi(getRating(report, dominantBits, eqChecker, Ratings::oxygen_generator), nullptr, 2) * std::stoi(getRating(report, dominantBits, eqChecker, Ratings::C02_scrubber), nullptr, 2);
+	int result = getRating(report, dominantBits, eqChecker, Ratings::oxygen_generator) * getRating(report, dominantBits, eqChecker, Ratings::C02_scrubber);
 
 	std::cout << "The life support rating : " << result << std::endl;
 }
