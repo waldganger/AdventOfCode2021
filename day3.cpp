@@ -6,13 +6,6 @@
 #include <fstream>
 
 
-/*
-- parse chaque ligne
-- pour chaque caractère du string, push dans un array
-- pour chaque colonne calculer bit dominant
-- gamma, 12345
-*/
-
 std::vector<std::string> parseBinFile(const char* path)
 {
 	std::fstream file;
@@ -89,11 +82,11 @@ int findDominantBitInColforRemainingLines(const std::vector<std::string>& report
 	}
 
 	if (zeroCount == oneCount) return -1;
-	return zeroCount > oneCount ? zeroCount : oneCount;
+	return zeroCount > oneCount ? 0 : 1;
 }
 
 
-int getRating(const std::vector<std::string>& report, const std::string& dominantBits, const std::string& eqChecker, Ratings method)
+int getRating(const std::vector<std::string>& report, const std::string& eqChecker, Ratings method)
 {
 	const size_t reportLineLength = report[0].length();
 	std::vector<std::string> matchingNumbers;
@@ -115,13 +108,17 @@ int getRating(const std::vector<std::string>& report, const std::string& dominan
 			{
 				if (linesToKeep[l] == false) continue;
 				std::string temp(1, report[l][c]);
+				const int currentBit = std::stoi(temp);
+				int bitCriteria = (method == Ratings::oxygen_generator ? 1 : 0);
 
-				// If 0 and 1 are equally common, keep values with a 1 (oxygen generator) or a 0 (CO2 scrubber)  in the position being considered.
-				if (std::stoi(temp) == (method == Ratings::oxygen_generator ? 0 : 1))
+				if (currentBit != bitCriteria)
 				{
 					linesToKeep[l] = false;
 
-					if (goodLinesRemaining == 1) { return std::stoi(report[l], nullptr, 2); }
+					if (goodLinesRemaining == 1)
+					{
+						return std::stoi(report[l], nullptr, 2);
+					}
 					goodLinesRemaining--;
 				}
 			}
@@ -133,19 +130,18 @@ int getRating(const std::vector<std::string>& report, const std::string& dominan
 				if (linesToKeep[l] == false) continue;
 
 				std::string temp(1, report[l][c]);
-				std::string tempBitChar(1, dominantBits[c]);
+				const int currentBit = std::stoi(temp);
 
 				// depending on rating method, keep the most OR least common bit in the current bit position, and keep only lines with that bit in that position.
 				int bitCriteria = (method == Ratings::oxygen_generator ? commonBit : (commonBit == 1 ? 0 : 1));
 
-				if (std::stoi(temp) != bitCriteria && linesToKeep[l] == true)
+				if (currentBit != bitCriteria)
 				{
 					linesToKeep[l] = false;
 					if (goodLinesRemaining == 1)
 					{
 						return std::stoi(report[l], nullptr, 2);
 					}
-
 					goodLinesRemaining--;
 				}
 			}
@@ -153,42 +149,34 @@ int getRating(const std::vector<std::string>& report, const std::string& dominan
 
 	}
 
-	int result = 0;
-	//for (auto l : linesToKeep)
-	//{
-	//	result += l;
-	//}
-
+	int lastLineStandingIndex = 0;
 
 	for (int i = 0; i < linesToKeep.size(); i++)
 	{
 		if (linesToKeep[i])
 		{
-			std::cout << "YEAH" << std::endl;
-			result = i;
+			lastLineStandingIndex = i;
 		}
 	}
-	return std::stoi(report[result], nullptr, 2);
+
+	return std::stoi(report[lastLineStandingIndex], nullptr, 2);
 }
 
 void day3part2()
 {
 	auto report = parseBinFile("res/day3.txt");
 	std::string dominantBits;
-	std::string eqChecker = findDominantBits(report, dominantBits);
-	std::cout << dominantBits << std::endl;
-	std::cout << "Equality checker : " << "\"" << eqChecker << "\"" << std::endl;
 
 	std::cout << "oxygen generator rating" << std::endl;
-	std::cout << getRating(report, dominantBits, eqChecker, Ratings::oxygen_generator) << std::endl;
+	std::cout << getRating(report, dominantBits, Ratings::oxygen_generator) << std::endl;
 
 	std::cout << "CO2 scrubber rating" << std::endl;
-	std::cout << getRating(report, dominantBits, eqChecker, Ratings::C02_scrubber) << std::endl;
+	std::cout << getRating(report, dominantBits, Ratings::C02_scrubber) << std::endl;
 
-	int result = getRating(report, dominantBits, eqChecker, Ratings::oxygen_generator) * getRating(report, dominantBits, eqChecker, Ratings::C02_scrubber);
+	int result = getRating(report, dominantBits, Ratings::oxygen_generator) * getRating(report, dominantBits, Ratings::C02_scrubber);
 
 	std::cout << "The life support rating : " << result << std::endl;
-	std::cout << std::stoi(report[0], nullptr, 2) << std::endl;
+
 }
 
 void day3part1()
