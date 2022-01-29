@@ -123,11 +123,12 @@ int checkWinner(const BingoCards& bingoCards, const int tirage, WinningBoard& wi
 }
 
 
-WinningBoard boardMarker(BingoCards& bingocards, const std::vector<int>& tirages)
+std::vector<WinningBoard> boardMarker(BingoCards& bingocards, const std::vector<int>& tirages)
 {
-	WinningBoard winningBoard = { false, 0, -1 };
+	std::vector<WinningBoard> winningBoards;
 	for (const int& tirage : tirages)
 	{
+		WinningBoard winningBoard = { false, 0, -1 };
 		for (std::vector<std::vector<int>>& card : bingocards)
 		{
 			for (std::vector<int>& line : card)
@@ -143,11 +144,11 @@ WinningBoard boardMarker(BingoCards& bingocards, const std::vector<int>& tirages
 		}
 		// A chaque tirage, on regarde s'il y a un gagnant.
 		if (checkWinner(bingocards, tirage, winningBoard))
-			return winningBoard;
+			winningBoards.push_back(winningBoard);
 	}
 
 	// S'il n'y a pas de gagnant, c'est bizarre ! On retourne un WinninBoard avec tirage à -1;
-	return winningBoard;
+	return winningBoards;
 }
 
 int computeScore(const WinningBoard& winningBoard, const BingoCards& bingoCards)
