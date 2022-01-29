@@ -1,6 +1,7 @@
 #include "day4.h"
 #include <sstream>
 
+
 std::vector<std::string> readFile(const char* path)
 {
 	std::vector<std::string> lines;
@@ -47,10 +48,10 @@ std::vector<int> getNumberLine(std::string& v, std::string delimiter)
 	return result;
 }
 
-std::vector<std::vector<std::vector<int>>> initBingoCards(std::vector<std::string>& v)
+BingoCards initBingoCards(std::vector<std::string>& v)
 {
 	std::vector<std::vector<int>> bingoCard;
-	std::vector<std::vector<std::vector<int>>> bingoCards;
+	BingoCards bingoCards;
 
 	for (size_t i = 1; i < v.size(); i++)
 	{
@@ -69,13 +70,14 @@ std::vector<std::vector<std::vector<int>>> initBingoCards(std::vector<std::strin
 	return bingoCards;
 }
 
+
 void runday4()
 {
 	std::cout << "Hello squid, wanna play bingo ?" << std::endl;
 	std::string test = "yes";
 	std::vector lines = readFile("res/day4.txt");
 	std::vector<int> tirage = getNumberLine(lines[0], ",");
-	std::vector<std::vector<std::vector<int>>> bingoCards = initBingoCards(lines);
+	BingoCards bingoCards = initBingoCards(lines);
 
 	for (auto card : bingoCards)
 	{
