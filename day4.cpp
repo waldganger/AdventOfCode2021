@@ -1,4 +1,5 @@
 #include "day4.h"
+#include <sstream>
 
 std::vector<std::string> readFile(const char* path)
 {
@@ -18,32 +19,45 @@ std::vector<std::string> readFile(const char* path)
 
 std::vector<std::string> splitString(std::string& str, std::string delimiter)
 {
-	std::vector<std::string> result;
-	size_t last = 0;
-	size_t next = 0;
+	size_t pos_start = 0;
+	size_t pos_end = 0;
+	size_t delim_len = delimiter.length();
 	std::string token;
+	std::vector<std::string> res;
 
-	while ((next = str.find(delimiter, last)))
+	while ((pos_end = str.find(delimiter, pos_start)) != std::string::npos)
 	{
-		token = str.substr(last, next - last);
-		result.push_back(token);
-		if (next == std::string::npos) break;
-		last = next + 1;
+		token = str.substr(pos_start, pos_end - pos_start);
+		pos_start = pos_end + delim_len;
+		res.push_back(token);
 	}
 
+	res.push_back(str.substr(pos_start));
+	return res;
+}
+
+std::vector<int> getNumberLine(std::string& v, std::string delimiter)
+{
+	std::vector<int> result;
+	std::vector strNumbers = splitString(v, delimiter);
+	for (std::string& n : strNumbers)
+	{
+		if (n != delimiter && n != "") result.push_back(std::stoi(n));
+	}
 	return result;
 }
 
-std::vector<int> initRandomNumbers(std::string& v)
+std::vector<std::vector<int>> initBingoCards(std::vector<std::string>& v)
 {
-	std::vector<int> result;
-	std::vector strNumbers = splitString(v, ",");
-	for (std::string& n : strNumbers)
+	std::vector<std::vector<int>> bingoCards;
+	for (size_t i = 1; i < v.size(); i++)
 	{
-		//std::cout << n << std::endl;
-		result.push_back(std::stoi(n));
+		if (v[i] == "") continue;
+		//if (i % 6 == 0) continue;
+		std::vector<int> bingoLine = getNumberLine(v[i], " ");
+		bingoCards.push_back(bingoLine);
 	}
-	return result;
+	return bingoCards;
 }
 
 void runday4()
@@ -51,5 +65,19 @@ void runday4()
 	std::cout << "Hello squid, wanna play bingo ?" << std::endl;
 	std::string test = "yes";
 	std::vector lines = readFile("res/day4.txt");
-	std::vector<int> tirage = initRandomNumbers(lines[0]);
+	std::vector<int> tirage = getNumberLine(lines[0], ",");
+	std::vector<std::vector<int>> bingoCards = initBingoCards(lines);
+	for (size_t i = 0; i < bingoCards.size(); i++)
+	{
+		for (size_t j = 0; j < bingoCards[i].size(); j++)
+		{
+
+			std::cout << bingoCards[i][j] << " ";
+			//if (j % 4 == 0)
+			//	std::cout << std::endl;
+		}
+		std::cout << std::endl;
+		if ((i + 1) % 5 == 0)
+			std::cout << std::endl;
+	}
 }
