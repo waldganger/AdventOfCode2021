@@ -6,4 +6,9 @@
 
 typedef std::vector<std::vector<std::vector<int>>> BingoCards;
 
+typedef struct {
+	size_t boardIndex;
+	int tirage;
+} WinningBoard;
+
 void runday4();

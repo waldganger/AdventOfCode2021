@@ -87,6 +87,21 @@ void boardMarker(BingoCards& bingocards, const std::vector<int>& tirages)
 				}
 			}
 		}
+		// TODO : checkWinner
+	}
+}
+
+
+WinningBoard checkWinner(const BingoCards& bingoCards, const int tirage)
+{
+	WinningBoard winningBoard = { 0 };
+
+	for (std::vector<std::vector<int>> bingoCard : bingoCards)
+	{
+		for (size_t l = 0; l < BINGO_LINE_SIZE; l++)
+		{
+
+		}
 	}
 }
 
