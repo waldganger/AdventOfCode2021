@@ -22,3 +22,4 @@ typedef struct {
 
 //Instruction instructionDecoder(const std::string& line, const char delimiter);
 void runDay2Second();
+std::vector<std::string> parseFile(const char* path);
