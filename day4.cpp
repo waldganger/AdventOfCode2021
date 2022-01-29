@@ -70,6 +70,25 @@ BingoCards initBingoCards(std::vector<std::string>& v)
 	return bingoCards;
 }
 
+void boardMarker(BingoCards& bingocards, const std::vector<int>& tirages)
+{
+	for (const int& tirage : tirages)
+	{
+		for (std::vector<std::vector<int>>& card : bingocards)
+		{
+			for (std::vector<int>& line : card)
+			{
+				for (int& number : line)
+				{
+					if (number == tirage)
+					{
+						number = -1;
+					}
+				}
+			}
+		}
+	}
+}
 
 void runday4()
 {
@@ -79,13 +98,15 @@ void runday4()
 	std::vector<int> tirage = getNumberLine(lines[0], ",");
 	BingoCards bingoCards = initBingoCards(lines);
 
+	boardMarker(bingoCards, tirage);
+
 	for (auto card : bingoCards)
 	{
 		for (auto line : card)
 		{
 			for (auto number : line)
 			{
-				std::cout << number << " ";
+				std::cout << (number == -1 ? "X" : " ") << " ";
 			}
 			std::cout << std::endl;
 		}
