@@ -70,11 +70,11 @@ BingoCards initBingoCards(std::vector<std::string>& v)
 	return bingoCards;
 }
 
-WinningBoard checkWinner(const BingoCards& bingoCards, const int tirage)
+int checkWinner(const BingoCards& bingoCards, const int tirage, WinningBoard& winningBoard)
 {
-	WinningBoard winningBoard = { 0 };
 	int markInRow = 0;
 	int markInColumn = 0;
+	size_t bsz = bingoCards.size();
 
 	for (size_t i = 0; i < bingoCards.size(); i++)
 	{
@@ -83,14 +83,16 @@ WinningBoard checkWinner(const BingoCards& bingoCards, const int tirage)
 			markInRow = 0;
 			for (size_t c = 0; c < BINGO_ROW_SIZE; c++)
 			{
+				int test = bingoCards[i][l][c];
 				if (bingoCards[i][l][c] == -1)
 				{
 					markInRow++;
 					if (markInRow == BINGO_ROW_SIZE)
 					{
+						winningBoard.hasWon = true;
 						winningBoard.boardIndex = i;
 						winningBoard.tirage = tirage;
-						return winningBoard;
+						return 1;
 					}
 				}
 			}
@@ -105,22 +107,25 @@ WinningBoard checkWinner(const BingoCards& bingoCards, const int tirage)
 					markInColumn++;
 					if (markInColumn == BINGO_LINE_SIZE)
 					{
+						winningBoard.hasWon = true;
 						winningBoard.boardIndex = i;
 						winningBoard.tirage = tirage;
-						return winningBoard;
+						return 1;
 					}
 				}
 			}
 		}
 	}
 
-	winningBoard.tirage = -1;		// marque une erreur.
-	return winningBoard;
+	//winningBoard.tirage = -1;		// marque une erreur.
+	//return winningBoard;
+	return 0;
 }
 
 
 WinningBoard boardMarker(BingoCards& bingocards, const std::vector<int>& tirages)
 {
+	WinningBoard winningBoard = { false, 0, -1 };
 	for (const int& tirage : tirages)
 	{
 		for (std::vector<std::vector<int>>& card : bingocards)
@@ -137,13 +142,26 @@ WinningBoard boardMarker(BingoCards& bingocards, const std::vector<int>& tirages
 			}
 		}
 		// A chaque tirage, on regarde s'il y a un gagnant.
-		return checkWinner(bingocards, tirage);
+		if (checkWinner(bingocards, tirage, winningBoard))
+			return winningBoard;
 	}
 
 	// S'il n'y a pas de gagnant, c'est bizarre ! On retourne un WinninBoard avec tirage à -1;
-	WinningBoard erreur{ 0, -1 };
+	return winningBoard;
 }
 
+int computeScore(const WinningBoard& winningBoard, const BingoCards& bingoCards)
+{
+	int unmarkedSum = 0;
+	for (const std::vector<int>& line : bingoCards[winningBoard.boardIndex])
+	{
+		for (const int& number : line)
+		{
+			unmarkedSum += number == -1 ? 0 : number;
+		}
+	}
+	return unmarkedSum * winningBoard.tirage;
+}
 
 
 void runday4()
@@ -154,18 +172,21 @@ void runday4()
 	std::vector<int> tirage = getNumberLine(lines[0], ",");
 	BingoCards bingoCards = initBingoCards(lines);
 
-	boardMarker(bingoCards, tirage);
+	WinningBoard winningBoard = boardMarker(bingoCards, tirage);
 
-	for (auto card : bingoCards)
-	{
-		for (auto line : card)
-		{
-			for (auto number : line)
-			{
-				std::cout << (number == -1 ? "X" : " ") << " ";
-			}
-			std::cout << std::endl;
-		}
-		std::cout << std::endl;
-	}
+	std::cout << "Le score de la carte " << winningBoard.boardIndex << " avec le tirage " << winningBoard.tirage << " est de " << computeScore(winningBoard, bingoCards) << std::endl;
+
+
+	//for (auto card : bingoCards)
+	//{
+	//	for (auto line : card)
+	//	{
+	//		for (auto number : line)
+	//		{
+	//			std::cout << (number == -1 ? "X" : " ") << " ";
+	//		}
+	//		std::cout << std::endl;
+	//	}
+	//	std::cout << std::endl;
+	//}
 }

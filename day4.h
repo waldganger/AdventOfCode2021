@@ -7,6 +7,7 @@
 typedef std::vector<std::vector<std::vector<int>>> BingoCards;
 
 typedef struct {
+	bool hasWon;
 	size_t boardIndex;
 	int tirage;
 } WinningBoard;
