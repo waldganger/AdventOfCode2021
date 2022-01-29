@@ -47,16 +47,25 @@ std::vector<int> getNumberLine(std::string& v, std::string delimiter)
 	return result;
 }
 
-std::vector<std::vector<int>> initBingoCards(std::vector<std::string>& v)
+std::vector<std::vector<std::vector<int>>> initBingoCards(std::vector<std::string>& v)
 {
-	std::vector<std::vector<int>> bingoCards;
+	std::vector<std::vector<int>> bingoCard;
+	std::vector<std::vector<std::vector<int>>> bingoCards;
+
 	for (size_t i = 1; i < v.size(); i++)
 	{
 		if (v[i] == "") continue;
-		//if (i % 6 == 0) continue;
+
 		std::vector<int> bingoLine = getNumberLine(v[i], " ");
-		bingoCards.push_back(bingoLine);
+		bingoCard.push_back(bingoLine);
+
+		if (bingoCard.size() == BINGO_LINE_SIZE)
+		{
+			bingoCards.push_back(bingoCard);
+			bingoCard.clear();
+		}
 	}
+
 	return bingoCards;
 }
 
@@ -66,18 +75,18 @@ void runday4()
 	std::string test = "yes";
 	std::vector lines = readFile("res/day4.txt");
 	std::vector<int> tirage = getNumberLine(lines[0], ",");
-	std::vector<std::vector<int>> bingoCards = initBingoCards(lines);
-	for (size_t i = 0; i < bingoCards.size(); i++)
-	{
-		for (size_t j = 0; j < bingoCards[i].size(); j++)
-		{
+	std::vector<std::vector<std::vector<int>>> bingoCards = initBingoCards(lines);
 
-			std::cout << bingoCards[i][j] << " ";
-			//if (j % 4 == 0)
-			//	std::cout << std::endl;
+	for (auto card : bingoCards)
+	{
+		for (auto line : card)
+		{
+			for (auto number : line)
+			{
+				std::cout << number << " ";
+			}
+			std::cout << std::endl;
 		}
 		std::cout << std::endl;
-		if ((i + 1) % 5 == 0)
-			std::cout << std::endl;
 	}
 }
