@@ -74,9 +74,116 @@ void Day5::acquireEdgeCoordinates()
 }
 
 
+void Day5::doDiagram()
+{
+	/*const size_t columnLength = (size_t)m_edges.maxX - (size_t)m_edges.minX;
+	const size_t lineLength = (size_t)m_edges.maxY - (size_t)m_edges.minY;*/
+	const size_t columnLength = (size_t)m_edges.maxX + 1;
+	const size_t lineLength = (size_t)m_edges.maxY + 1;
+	char overlap = 49;
+
+	std::vector<char> diagramLine(columnLength, '.');
+
+	for (size_t i = 0; i < lineLength; i++)
+	{
+		m_diagram.push_back(diagramLine);
+	}
+
+	//for (size_t c = 0; c < columnLength; c++)
+	//{
+	//	for (size_t l = 0; l < lineLength; l++)
+	//	{
+	//		m_diagram[l][c] = '.';
+	//	}
+	//}
+
+
+
+	for (const Line& line : m_vents)
+	{
+		if (line.x1 == line.x2 || line.y1 == line.y2)							// For now, only consider horizontal and vertical lines
+		{
+			if (line.x1 == line.x2)												// vertical line
+			{
+
+				const size_t begin = line.y1 > line.y2 ? line.y2 : line.y1;
+				const size_t end = line.y1 > line.y2 ? line.y1 : line.y2;
+
+				const size_t offset = line.y1 > line.y2 ? line.y1 - line.y2 : line.y2 - line.y1;
+
+				for (size_t i = begin; i <= end; i++)
+				{
+					if (m_diagram[i][line.x1] == '.')
+					{
+						m_diagram[i][line.x1] = 49;
+					}
+					else
+					{
+						m_diagram[i][line.x1]++;
+
+					}
+				}
+			}
+			else																// horizontal line
+			{
+				const size_t begin = line.x1 > line.x2 ? line.x2 : line.x1;
+				const size_t end = line.x1 > line.x2 ? line.x1 : line.x2;
+
+				const size_t offset = line.x1 > line.x2 ? line.x1 - line.x2 : line.x2 - line.x1;
+
+				for (size_t i = begin; i <= end; i++)
+				{
+					if (m_diagram[line.y1][i] == '.')
+					{
+						m_diagram[line.y1][i] = 49;
+					}
+					else
+					{
+						m_diagram[line.y1][i]++;
+
+					}
+				}
+			}
+		}
+
+	}
+}
+
+void Day5::displayDiagram() const
+{
+	const size_t columnLength = (size_t)m_edges.maxX - (size_t)m_edges.minX;
+	const size_t lineLength = (size_t)m_edges.maxY - (size_t)m_edges.minY;
+
+	for (size_t c = 0; c < columnLength; c++)
+	{
+		for (size_t l = 0; l < lineLength; l++)
+		{
+			std::cout << m_diagram[l][c];
+		}
+		std::cout << std::endl;
+		std::cout << std::endl;
+	}
+}
+
+void Day5::overlap()
+{
+	for (const auto line : m_diagram)
+	{
+		for (const auto ch : line)
+		{
+			if (ch >= 50) m_overlap++;
+			if (ch < 46) throw std::exception("pas marché");
+		}
+	}
+}
+
+
+
 
 void runDay5()
 {
 	Day5 day5("res/day5.txt");
-	day5.displayVentsCoordinates();
+	//day5.displayVentsCoordinates();
+	//day5.displayDiagram();
+	day5.overlap();
 }
