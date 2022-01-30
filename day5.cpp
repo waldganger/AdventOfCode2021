@@ -1,4 +1,5 @@
 #include "day5.h"
+#include <limits>
 
 
 void Day5::readFile()
@@ -53,6 +54,25 @@ void Day5::displayVentsCoordinates() const
 		std::cout << l.x1 << "," << l.y1 << " -> " << l.x2 << "," << l.y2 << std::endl;
 	}
 }
+
+void Day5::acquireEdgeCoordinates()
+{
+	m_edges = { std::numeric_limits<int>::max(), std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), std::numeric_limits<int>::min() };
+
+	for (auto c : m_vents)
+	{
+		if (c.x1 < m_edges.minX) m_edges.minX = c.x1;
+		if (c.x2 < m_edges.minX) m_edges.minX = c.x2;
+		if (c.x1 > m_edges.maxX) m_edges.maxX = c.x1;
+		if (c.x2 > m_edges.maxX) m_edges.maxX = c.x2;
+
+		if (c.y1 < m_edges.minY) m_edges.minY = c.y1;
+		if (c.y2 < m_edges.minY) m_edges.minY = c.y2;
+		if (c.y1 > m_edges.maxY) m_edges.maxY = c.y1;
+		if (c.y2 > m_edges.maxY) m_edges.maxY = c.y2;
+	}
+}
+
 
 
 void runDay5()
