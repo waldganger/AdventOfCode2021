@@ -14,3 +14,4 @@ typedef struct {
 } WinningBoard;
 
 void runday4();
+std::vector<std::string> splitString(std::string& str, std::string delimiter);
