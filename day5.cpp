@@ -1,5 +1,6 @@
 #include "day5.h"
 #include <limits>
+#include <cmath>
 
 
 void Day5::readFile()
@@ -73,11 +74,19 @@ void Day5::acquireEdgeCoordinates()
 	}
 }
 
+// TODO: à tester.
+bool isDiagonal(const Line& line)
+{
+	int dx = std::abs(line.x1 - line.x2);
+	int dy = std::abs(line.y1 - line.y2);
+	if (dx == 0 || dy == 0) return false;		// la ligne est verticale ou horizontale
+	if (dx == dy) return true;
+	return false;
+}
+
 
 void Day5::doDiagram()
 {
-	/*const size_t columnLength = (size_t)m_edges.maxX - (size_t)m_edges.minX;
-	const size_t lineLength = (size_t)m_edges.maxY - (size_t)m_edges.minY;*/
 	const size_t columnLength = (size_t)m_edges.maxX + 1;
 	const size_t lineLength = (size_t)m_edges.maxY + 1;
 	char overlap = 49;
@@ -88,14 +97,6 @@ void Day5::doDiagram()
 	{
 		m_diagram.push_back(diagramLine);
 	}
-
-	//for (size_t c = 0; c < columnLength; c++)
-	//{
-	//	for (size_t l = 0; l < lineLength; l++)
-	//	{
-	//		m_diagram[l][c] = '.';
-	//	}
-	//}
 
 
 
