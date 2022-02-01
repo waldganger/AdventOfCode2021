@@ -74,7 +74,6 @@ void Day5::acquireEdgeCoordinates()
 	}
 }
 
-// TODO: à tester.
 bool isDiagonal(const Line& line)
 {
 	int dx = std::abs(line.x1 - line.x2);
@@ -87,6 +86,7 @@ bool isDiagonal(const Line& line)
 
 void Day5::doDiagram()
 {
+	int diag = 0, nonDiag = 0, droites = 0;
 	const size_t columnLength = (size_t)m_edges.maxX + 1;
 	const size_t lineLength = (size_t)m_edges.maxY + 1;
 	char overlap = 49;
@@ -98,11 +98,9 @@ void Day5::doDiagram()
 		m_diagram.push_back(diagramLine);
 	}
 
-
-
 	for (const Line& line : m_vents)
 	{
-		if (line.x1 == line.x2 || line.y1 == line.y2)							// For now, only consider horizontal and vertical lines
+		if (line.x1 == line.x2 || line.y1 == line.y2)
 		{
 			if (line.x1 == line.x2)												// vertical line
 			{
@@ -145,6 +143,96 @@ void Day5::doDiagram()
 					}
 				}
 			}
+			droites++;
+		}
+		else if (isDiagonal(line))
+		{
+
+			/*
+			4 cas :
+			1. haut gauche vers bas droit : x++ et y++
+			2. haut droit vers bas gauche : x-- et y++
+			3. bas gauche vers haut droit : y-- et x++
+			4. bas droit vers haut gauche : y-- et x--
+			*/
+
+			if (line.x1 < line.x2 && line.y1 < line.y2)							// 1. haut gauche vers bas droit : x++ et y++
+			{
+				const size_t offset = std::abs(line.x2 - line.x1);
+
+				for (size_t i = 0; i <= offset; i++)
+				{
+					if (m_diagram[line.y1 + i][line.x1 + i] == '.')
+					{
+						m_diagram[line.y1 + i][line.x1 + i] = 49;
+
+					}
+					else
+					{
+						m_diagram[line.y1 + i][line.x1 + i]++;
+					}
+				}
+			}
+			else if (line.x1 > line.x2 && line.y1 < line.y2)					// 2. haut droit vers bas gauche : x-- et y++
+			{
+				const size_t offset = std::abs(line.x2 - line.x1);
+
+				for (size_t i = 0; i <= offset; i++)
+				{
+					if (m_diagram[line.y1 + i][line.x1 - i] == '.')
+					{
+						m_diagram[line.y1 + i][line.x1 - i] = 49;
+
+					}
+					else
+					{
+						m_diagram[line.y1 + i][line.x1 - i]++;
+					}
+				}
+			}
+			else if (line.x1 < line.x2 && line.y1 > line.y2)					// 3. bas gauche vers haut droit : y-- et x++
+			{
+				const size_t offset = std::abs(line.x2 - line.x1);
+
+				for (size_t i = 0; i <= offset; i++)
+				{
+					if (m_diagram[line.y1 - i][line.x1 + i] == '.')
+					{
+						m_diagram[line.y1 - i][line.x1 + i] = 49;
+
+					}
+					else
+					{
+						m_diagram[line.y1 - i][line.x1 + i]++;
+					}
+				}
+			}
+			else if (line.x1 > line.x2 && line.y1 > line.y2)					// 4. bas droit vers haut gauche : y-- et x--
+			{
+				const size_t offset = std::abs(line.x2 - line.x1);
+
+				for (size_t i = 0; i <= offset; i++)
+				{
+					if (m_diagram[line.y1 - i][line.x1 - i] == '.')
+					{
+						m_diagram[line.y1 - i][line.x1 - i] = 49;
+
+					}
+					else
+					{
+						m_diagram[line.y1 - i][line.x1 - i]++;
+					}
+				}
+			}
+			else
+			{
+				throw std::exception("CAS NON PREVU");
+			}
+			diag++;
+		}
+		else if (isDiagonal(line) == false)
+		{
+			nonDiag++;
 		}
 
 	}
@@ -173,18 +261,15 @@ void Day5::overlap()
 		for (const auto ch : line)
 		{
 			if (ch >= 50) m_overlap++;
-			if (ch < 46) throw std::exception("pas marché");
+			if (ch < 46) throw std::exception("abandon ship");
 		}
 	}
 }
 
 
-
-
 void runDay5()
 {
 	Day5 day5("res/day5.txt");
-	//day5.displayVentsCoordinates();
-	//day5.displayDiagram();
+	day5.displayDiagram();
 	day5.overlap();
 }
