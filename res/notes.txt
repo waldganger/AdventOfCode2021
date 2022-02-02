@@ -1,0 +1,37 @@
+-		m_edges	{minX=10 maxX=989 minY=10 ...}	EdgeCoordinates
+		minX	10	int
+		maxX	989	int
+		minY	10	int
+		maxY	990	int
+
+6192 6407
+
+
+1.1....11.
+.111...2..
+..2.1.111.
+...1.2.2..
+.112313211
+...1.2....
+..1...1...
+.1.....1..
+1.......1.
+222111....
+
+0,0 -> 9,9
+0,2 -> 3,5
+
+déterminer Max(x) et Max(y)
+
+
+déterminer translation x et translation y
+dx = (Max x2 - x1)
+dy = (Max y2 - y1)
+
+dx  doit être == à dy
+
+
+x++ et y ++ bas droite
+x++ y-- haut droite
+x-- et y-- bas gauche
+x-- y++ gauche haut
