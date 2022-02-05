@@ -2,6 +2,11 @@
 
 #include "commoncpp.h"
 
+typedef struct {
+	uint8_t status;
+	uint64_t count;
+} Timer;
+
 class Day6
 {
 public:
@@ -9,13 +14,15 @@ public:
 	~Day6() {};
 
 	void populateFishes();
-	void print() const;
-	int doFishes(const int days);
+	size_t doFishes(const int days);
 
 private:
 	const char* m_filePath;
-	std::vector<std::vector<int>> m_fishesStates;
+	std::vector<uint8_t> m_fishesState;
 	int m_dayCounter;
 };
 
+
+
 void runDay6();
+int flags();
