@@ -11,8 +11,8 @@ int main()
 	//runday3();
 	//runday4();
 	//runDay5();
-	//runDay6();
-	flags();
+	runDay6();
+	//flags();
 
 }
 
