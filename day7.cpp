@@ -77,9 +77,21 @@ void Day7::printAlignes() const
 // 2. Prendre chaque valeur commme point de référence
 // 3. Pour chaque valeur, calculer la distance avec le point de référence, et multiplier par nombre occurences => additionner le tout
 // 2. Trouver le nombre commun le plus proche de la moyenne
-uint32_t Day7::computeBestSpot() const
+uint32_t Day7::computeLowerCons() const
 {
 	uint32_t minFuelCons = 1 << 32 - 1;
+	uint32_t tempFuelCons = 0;
+
+	for (size_t i = 0; i < m_positions.size(); i++)
+	{
+		for (size_t j = 0; j < m_positions.size(); j++)
+		{
+			tempFuelCons += std::abs((int)(m_positions[i] - m_positions[j]));
+		}
+		
+		if (tempFuelCons < minFuelCons) minFuelCons = tempFuelCons;
+		tempFuelCons = 0;
+	}
 	return minFuelCons;
 }
 
@@ -88,8 +100,6 @@ uint32_t Day7::computeBestSpot() const
 void runDay7()
 {
 	Day7 day7("res/day7.txt");
-	std::cout << "La moyenne est de " << day7.getMean() << std::endl;
-	day7.detectAlignes();
-	day7.printAlignes();
-	std::cout << day7.computeBestSpot() << std::endl;
+	std::cout << day7.computeLowerCons() << std::endl;
+	std::cout << "Consommation la plus basse possible : " << day7.computeLowerCons() << std::endl;
 }

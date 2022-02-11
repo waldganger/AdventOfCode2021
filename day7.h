@@ -1,6 +1,7 @@
 #pragma once
 #include "commoncpp.h"
 #include <algorithm>
+#include <cmath>
 
 // 1. Prendre conso = uint32::max
 // 2. Prendre chaque valeur commme point de référence
@@ -23,7 +24,7 @@ public:
 	uint32_t getMean() const;
 	void detectAlignes();
 	void printAlignes() const;
-	uint32_t computeBestSpot() const;
+	uint32_t computeLowerCons() const;
 
 private:
 	const char* m_filePath = NULL;
