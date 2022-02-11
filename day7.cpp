@@ -33,28 +33,54 @@ uint32_t Day7::getMean() const
 
 void Day7::detectAlignes() 
 {
-	uint32_t max;
-
 	for (size_t i = 0; i < m_positions.size(); i++)
 	{
-		int counter = 0;
 		for (size_t j = i; j < m_positions.size(); j++)
 		{
 			if (m_positions[j] == m_positions[i])
 			{
-				counter++;
+				bool valueExists = false;
+				for (Occurence& o : m_SortedOccurences)
+				{
+					if (m_positions[i] == o.value)
+					{
+						o.counter++;
+						valueExists = true;
+						break;
+					}
+				}
+
+				if(valueExists == false) 
+					m_SortedOccurences.push_back({ m_positions[i], 1 });
 			}
 		}
-		m_occurences.push_back({ m_positions[i], counter});
 	}
+
+	std::sort(m_SortedOccurences.begin(), m_SortedOccurences.end(), [](Occurence a, Occurence b) {
+		return a.counter > b.counter;
+		});
 }
+
+
+
+
 
 void Day7::printAlignes() const
 {
-	for (const Occurence& o : m_occurences)
+	for (const Occurence& o : m_SortedOccurences)
 	{
-		std::cout << o.number << " apparait " << o.counter << " fois." << std::endl;
+		std::cout << o.value << " apparait " << o.counter << " fois." << std::endl;
 	}
+}
+
+// 1. Prendre conso = uint32::max
+// 2. Prendre chaque valeur commme point de référence
+// 3. Pour chaque valeur, calculer la distance avec le point de référence, et multiplier par nombre occurences => additionner le tout
+// 2. Trouver le nombre commun le plus proche de la moyenne
+uint32_t Day7::computeBestSpot() const
+{
+	uint32_t minFuelCons = 1 << 32 - 1;
+	return minFuelCons;
 }
 
 
@@ -65,4 +91,5 @@ void runDay7()
 	std::cout << "La moyenne est de " << day7.getMean() << std::endl;
 	day7.detectAlignes();
 	day7.printAlignes();
+	std::cout << day7.computeBestSpot() << std::endl;
 }
