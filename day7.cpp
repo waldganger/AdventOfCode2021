@@ -79,14 +79,20 @@ void Day7::printAlignes() const
 // 2. Trouver le nombre commun le plus proche de la moyenne
 uint32_t Day7::computeLowerCons() const
 {
+	uint32_t maxValue = *std::max_element(m_positions.begin(), m_positions.end());
 	uint32_t minFuelCons = 1 << 32 - 1;
 	uint32_t tempFuelCons = 0;
 
-	for (size_t i = 0; i < m_positions.size(); i++)
+	for (size_t i = 0; i < maxValue; i++)
 	{
 		for (size_t j = 0; j < m_positions.size(); j++)
 		{
-			tempFuelCons += std::abs((int)(m_positions[i] - m_positions[j]));
+			uint32_t distance = std::abs((int)(i - m_positions[j]));
+
+			for (size_t k = 0; k < distance; k++)
+			{
+				tempFuelCons += (k +1);
+			}
 		}
 		
 		if (tempFuelCons < minFuelCons) minFuelCons = tempFuelCons;
@@ -100,6 +106,5 @@ uint32_t Day7::computeLowerCons() const
 void runDay7()
 {
 	Day7 day7("res/day7.txt");
-	std::cout << day7.computeLowerCons() << std::endl;
 	std::cout << "Consommation la plus basse possible : " << day7.computeLowerCons() << std::endl;
 }
